@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>🤫 Tirano's Whispers 👁️</title>
-
 <style>
 * { box-sizing: border-box; }
 
@@ -44,12 +43,30 @@ button {
     position: fixed;
     top: 15px;
     right: 15px;
-    width: auto;
     padding: 10px 14px;
     background: black;
     color: white;
     border-radius: 10px;
+    cursor: pointer;
     z-index: 1000;
+    animation: pulso 1.5s infinite;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+#btnCodigos:hover {
+    animation-play-state: paused;
+    transform: scale(1.08);
+    background-color: #45a049;
+}
+
+#btnCodigos:active {
+    transform: scale(0.95);
+}
+
+@keyframes pulso {
+    0% { transform: scale(1); box-shadow: 0 0 0 rgba(0,0,0,0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 0 10px rgba(0,0,0,0.6); }
+    100% { transform: scale(1); box-shadow: 0 0 0 rgba(0,0,0,0.4); }
 }
 
 #panelCodigos {
@@ -64,159 +81,102 @@ button {
     z-index: 1000;
 }
 
-.oculto {
-    display: none;
-}
+.oculto { display: none; }
 
-#contenido {
-    opacity: 0;
-    transition: opacity 1s;
-}
-#contenido.visible {
-    opacity: 1;
-}
+#contenido { opacity: 0; transition: opacity 1s; }
+#contenido.visible { opacity: 1; }
 
-video, img {
-    width: 100%;
-    margin-top: 12px;
-    border-radius: 10px;
-}
-
-@keyframes pulso {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 rgba(0,0,0,0.4);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 10px rgba(0,0,0,0.6);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 rgba(0,0,0,0.4);
-    }
-}
-
-#btnCodigos {
-    animation: pulso 1.5s infinite;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-}
-#btnCodigos:hover {
-    animation-play-state: paused;
-    transform: scale(1.08);
-    background-color: #45a049;
-}
-#btnCodigos:active {
-    transform: scale(0.95);
-}
-
+video, img { width: 100%; margin-top: 12px; border-radius: 10px; }
 </style>
 </head>
-
 <body>
 
+<!-- Botón de códigos -->
 <button id="btnCodigos" onclick="mostrarCodigos()">📜 Códigos</button>
 
+<!-- Contenedor principal -->
 <div class="contenedor">
     <h1>🤫 Tirano's Whispers 👁️</h1>
     <input type="password" id="password" placeholder="Contraseña">
     <button onclick="verificar()">Desbloquear</button>
-    
-    <p id="contador" style="margin-top:10px; font-size:14px; color:#FFFF00;">
-    🔓 0 / 5 desbloqueados
-</p>
-    
+
+    <p id="contador" style="margin-top:10px; font-size:14px; color:#FFFF00;">🔓 0 / 0 desbloqueados</p>
     <p id="mensaje"></p>
     <div id="contenido"></div>
 </div>
 
-<!-- PANEL -->
+<!-- Panel de códigos desbloqueados -->
 <div id="panelCodigos" class="oculto">
     <h3>📜 Desbloqueados</h3>
     <ul id="listaCodigos"></ul>
     <button onclick="cerrarPanel()">Cerrar</button>
 </div>
 
+<!-- Audios -->
 <audio id="sonidoCorrecto" src="aw-shucks.mp3"></audio>
 <audio id="sonidoError" src="you-bitch.mp3"></audio>
 <audio id="audioSecreto"></audio>
 
 <script>
-let codigosDesbloqueados = JSON.parse(
-    localStorage.getItem("codigosDesbloqueados")
-) || [];
+// Array para guardar códigos desbloqueados
+let codigosDesbloqueados = JSON.parse(localStorage.getItem("codigosDesbloqueados")) || [];
 
+// Contenido secreto
 const secretos = {
     lirica: { tipo: "video", archivo: "OficialShucks.mp4" },
     shucks: { tipo: "imagen", archivo: "Torders.png", texto: "Aw shucks" },
     marmota: { tipo: "imagen", archivo: "marmota.png", texto: "B-Bauro…?" },
-    tirano: { tipo: "imagen", archivo: "Tirano.png", link: "https://discord.gg/mYrXAW2Hfh", texto: "Unete" },
+    tirano: { tipo: "imagen", archivo: "Tirano.png", link: "https://discord.gg/mYrXAW2Hfh", texto: "Unete a este server" },
     marvin: { tipo: "imagen", archivo: "marvon.png", texto: "Who solos me?" },
-    creador: { tipo: "imagen", archivo: "jeffy.png", texto: "Pagina hecha por: Samuel. - - -  Nota del creador: - - - Realmente, disfrute el proceso de crear esta pagina. Es una pagina por un cabron que no sabe de programacion jajajsksjss. Me siento orgulloso de este proyecto y de ver lo que logre hacer. Añadire más codigos al pasar el tiempo, una que otra sugerencia me vendria bien. Eso es todo, gracias por leer" },
+    creador: { tipo: "imagen", archivo: "jeffy.png", texto: "Pagina hecha por Samuel. Disfruté crearla." },
     hastur: { tipo: "imagen", archivo: "Hastur.png", texto: "¡Es una pena caer en manos del dios vivo!" },
-    hello: { tipo: "imagen", archivo: "detg.png", texto: "Hola! Bienvenido a tirano's whispers. En Esta pagina agregaras codigos para desbloquear contenido! Te dejo 3 codigos para que veas como funciona esto: - lirica - shucks - creador. Disfruta!" }
+    hello: { tipo: "imagen", archivo: "detg.png", texto: "Bienvenido a Tirano's Whispers. Prueba los códigos: lirica, shucks, creador." }
 };
 
+// Actualizar contador
 function actualizarContador() {
     const total = Object.keys(secretos).length;
     const desbloqueados = codigosDesbloqueados.length;
-
-    document.getElementById("contador").textContent =
-        `🔓 ${desbloqueados} / ${total} desbloqueados`;
+    document.getElementById("contador").textContent = `🔓 ${desbloqueados} / ${total} desbloqueados`;
 }
 
-
+// Verificar contraseña
 function verificar() {
-    const pass = password.value.toLowerCase();
-    password.value = "";
+    const pass = document.getElementById("password").value.toLowerCase();
+    document.getElementById("password").value = "";
 
     if (secretos[pass]) {
-        mensaje.textContent = "🎉 Contenido desbloqueado. Disfruta!";
+        mensaje.textContent = "🎉 Contenido desbloqueado!";
         mensaje.style.color = "green";
-        
-if (!codigosDesbloqueados.includes(pass)) {
-    codigosDesbloqueados.push(pass);
 
-    localStorage.setItem(
-        "codigosDesbloqueados",
-        JSON.stringify(codigosDesbloqueados)
-    );
-
-    actualizarContador();
-}
+        // Guardar progreso
+        if (!codigosDesbloqueados.includes(pass)) {
+            codigosDesbloqueados.push(pass);
+            localStorage.setItem("codigosDesbloqueados", JSON.stringify(codigosDesbloqueados));
+            actualizarContador();
+        }
 
         const s = secretos[pass];
         contenido.innerHTML = "";
 
-if (s.tipo === "video") {
-    contenido.innerHTML = `
-        <video controls autoplay>
-            <source src="${s.archivo}">
-        </video>
-    `;
-}
-
-if (s.tipo === "imagen") {
-    contenido.innerHTML = `<img src="${s.archivo}">`;
-}
-
-if (s.texto) {
-    contenido.innerHTML += `
-        <p style="margin-top:10px; font-weight:bold;">
-            ${s.texto}
-        </p>
-    `;
-}
-
-if (s.texto && s.link) {
-    contenido.innerHTML += `
-        <p style="margin-top:10px; font-weight:bold;">
-            <a href="${s.link}" target="_blank" style="color:#00ffcc; text-decoration:none;">
-                ${s.texto}
-            </a>
-        </p>
-    `;
-}
+        // Video
+        if (s.tipo === "video") {
+            contenido.innerHTML = `<video controls autoplay><source src="${s.archivo}"></video>`;
+        }
+        // Imagen
+        if (s.tipo === "imagen") {
+            contenido.innerHTML = `<img src="${s.archivo}">`;
+        }
+        // Texto normal
+        if (s.texto && !s.link) {
+            contenido.innerHTML += `<p style="margin-top:10px; font-weight:bold;">${s.texto}</p>`;
+        }
+        // Texto con link
+        if (s.texto && s.link) {
+            contenido.innerHTML += `<p style="margin-top:10px; font-weight:bold;">
+                <a href="${s.link}" target="_blank" style="color:#00ffcc; text-decoration:none;">${s.texto}</a>
+            </p>`;
+        }
 
         setTimeout(() => contenido.classList.add("visible"), 50);
         sonidoCorrecto.play();
@@ -227,6 +187,7 @@ if (s.texto && s.link) {
     }
 }
 
+// panel de códigos
 function mostrarCodigos() {
     listaCodigos.innerHTML = codigosDesbloqueados.length
         ? codigosDesbloqueados.map(c => `<li>${c}</li>`).join("")
@@ -234,12 +195,11 @@ function mostrarCodigos() {
     panelCodigos.classList.remove("oculto");
 }
 
-function cerrarPanel() {
-    panelCodigos.classList.add("oculto");
-}
+// Cerrar panel
+function cerrarPanel() { panelCodigos.classList.add("oculto"); }
 
+// Inicializar contador
 actualizarContador();
-
 </script>
 
 </body>
