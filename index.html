@@ -112,7 +112,7 @@ video, img {
 <button id="btnCodigos" onclick="mostrarCodigos()">📜 Códigos</button>
 
 <div class="contenedor">
-    <h1>🤫 Tirano's Whispers 👁️</h1>
+    <h1>🤫 Tirano's Whispers 👁️(DEMO) </h1>
 
     <p>
         Bienvenid@ a la demo de "Tirano's Whispers".<br>
@@ -153,12 +153,12 @@ let codigosDesbloqueados = JSON.parse(localStorage.getItem("codigosDesbloqueados
 const secretos = {
     hello: {
         tipo: "texto",
-        texto: "Próximamente estos códigos tendrán un orden, pero por mientras, simplemente pruebalos y sugiere algunos para agregar próximamente. CÓDIGOS: -creador, marvin, shucks, sad, minas, lirica, marmota, nicky- Esos son todos. Disfruta!"
+        texto: "Próximamente estos códigos tendrán un orden. Por ahora, pruébalos y disfruta. CÓDIGOS: creador, marvin, shucks, sad, minas, lirica, marmota, nicky- Disfruta!"
     },
     creador: {
         tipo: "imagen",
         archivo: "jeffy.png",
-        texto: "Página hecha por Samuel. Gracias por visitar Tirano's Whispers."
+        texto: "Página hecha por Samuel. Gracias por visitar Tirano's Whispers"
     },
     shucks: {
         tipo: "imagen",
@@ -180,19 +180,24 @@ const secretos = {
         archivo: "OficialShucks.mp4"
     },
     minas: {
-      tipo: "imagen",
-      archivo: "CapVoid.png",
-      texto: "¡Our brains are sweeping!" },
+        tipo: "imagen",
+        archivo: "CapVoid.png",
+        texto: "¡Our brains are sweeping!"
+    },
     nicky: {
-      tipo: "imagen",
-      archivo: "nicky.png",
-      texto: "Is that Nicky Roth?" },
+        tipo: "imagen",
+        archivo: "nicky.png",
+        texto: "Is that Nicky Roth?"
+    },
     sad: {
-      tipo: "imagen",
-      archivo: "Sad.png",
-      texto: "Delete…"
+        tipo: "imagen",
+        archivo: "Sad.png",
+        texto: "Delete…"
     }
 };
+
+codigosDesbloqueados = codigosDesbloqueados.filter(c => secretos[c]);
+localStorage.setItem("codigosDesbloqueados", JSON.stringify(codigosDesbloqueados));
 
 function actualizarContador() {
     contador.textContent = `🔓 ${codigosDesbloqueados.length} / ${Object.keys(secretos).length} desbloqueados`;
