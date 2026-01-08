@@ -12,9 +12,10 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    align-items: flex-start;
+    min-height: 100vh;
     margin: 0;
+    padding: 20px 0;
 }
 
 .contenedor {
@@ -115,7 +116,7 @@ video, img {
     <h1>🤫 Tirano's Whispers 👁️ (DEMO)</h1>
 
     <p>
-        Bienvenid@ a la demo de "Tirano's Whispers".<br>
+        Bienvenid@ a la demo de "Tirano's Whispers"<br>
         Código inicial: <b>hello</b>
     </p>
 
@@ -156,7 +157,7 @@ let codigosDesbloqueados = JSON.parse(localStorage.getItem("codigosDesbloqueados
 const secretos = {
     hello: {
         tipo: "texto",
-        texto: "Próximamente estos códigos tendrán un orden. Por ahora, pruébalos y disfruta. CÓDIGOS: creador, marvin, shucks, sad, minas, lirica, marmota, nicky."
+        texto: "Próximamente estos códigos tendrán un orden. Por ahora, pruébalos y disfruta. CÓDIGOS: creador, marvin, shucks, sad, minas, lirica, marmota, nicky"
     },
     creador: {
         tipo: "imagen",
