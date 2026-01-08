@@ -112,7 +112,7 @@ video, img {
 <button id="btnCodigos" onclick="mostrarCodigos()">📜 Códigos</button>
 
 <div class="contenedor">
-    <h1>🤫 Tirano's Whispers 👁️(DEMO) </h1>
+    <h1>🤫 Tirano's Whispers 👁️ (DEMO)</h1>
 
     <p>
         Bienvenid@ a la demo de "Tirano's Whispers".<br>
@@ -121,6 +121,9 @@ video, img {
 
     <input type="password" id="password" placeholder="Contraseña">
     <button onclick="verificar()">Desbloquear</button>
+    <button onclick="reiniciarProgreso()" style="background:red; color:white;">
+        🔄 Reiniciar progreso
+    </button>
 
     <p id="contador" style="color:#FFFF00; margin-top:10px;"></p>
     <p id="mensaje"></p>
@@ -153,7 +156,7 @@ let codigosDesbloqueados = JSON.parse(localStorage.getItem("codigosDesbloqueados
 const secretos = {
     hello: {
         tipo: "texto",
-        texto: "Próximamente estos códigos tendrán un orden. Por ahora, pruébalos y disfruta. CÓDIGOS: creador, marvin, shucks, sad, minas, lirica, marmota, nicky- Disfruta!"
+        texto: "Próximamente estos códigos tendrán un orden. Por ahora, pruébalos y disfruta. CÓDIGOS: creador, marvin, shucks, sad, minas, lirica, marmota, nicky."
     },
     creador: {
         tipo: "imagen",
@@ -251,6 +254,21 @@ function verificar() {
     if (s.tipo === "texto") {
         escribirSusurro(s.texto);
     }
+}
+
+function reiniciarProgreso() {
+    const confirmar = confirm("¿Estás segur@ de que quieres eliminar TODO tu progreso?");
+    if (!confirmar) return;
+
+    localStorage.removeItem("codigosDesbloqueados");
+    codigosDesbloqueados = [];
+
+    contenido.innerHTML = "";
+    listaCodigos.innerHTML = "";
+    mensaje.textContent = "🔄 Progreso reiniciado";
+    mensaje.style.color = "orange";
+
+    actualizarContador();
 }
 
 function escribirSusurro(texto) {
